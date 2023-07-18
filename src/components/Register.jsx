@@ -1,9 +1,65 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
+
 const Register = () => {
+  const [formData, setFormData] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    marketing_accept: false,
+  });
+
+ const router = useRouter();
+
+  const { fname, lname, email, password, confirmPassword, marketing_accept } =
+    formData;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === "checkbox" ? checked : value;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: fieldValue }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+       
+      
+
+      const response = await fetch("http://localhost:3000/api/user", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          fname,
+          lname,
+          email,
+          password,
+          marketing_accept,
+        }),
+      });
+
+      if (response.ok) {
+        router.push("/");
+        router.refresh();
+      } else {
+        throw Error("faild to create user");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <section className="bg-gradient-to-r from-green-300 to-blue-500">
+    <section className="bg-gradient-to-r from-green-300 to-blue-300">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-center bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <Image
@@ -13,7 +69,6 @@ const Register = () => {
             height={450}
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
-
           <div className="hidden lg:relative lg:block lg:p-12">
             {/* <a className="block text-white" href="/">
               <span className="sr-only">Home</span>
@@ -75,48 +130,57 @@ const Register = () => {
               </p>
             </div>
 
-            <form className="mt-8 grid grid-cols-6 gap-6">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 grid grid-cols-6 gap-6"
+            >
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  for="FirstName"
+                  htmlFor="FirstName"
                   className="block text-sm font-medium text-gray-700"
                 >
                   First Name
                 </label>
 
                 <input
+                  value={fname}
+                  onChange={handleChange}
                   type="text"
                   id="FirstName"
-                  name="first_name"
+                  name="fname"
                   className="mt-1 w-full rounded-md py-1.5 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  for="LastName"
+                  htmlFor="LastName"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Last Name
                 </label>
 
                 <input
+                  value={lname}
+                  onChange={handleChange}
                   type="text"
                   id="LastName"
-                  name="last_name"
+                  name="lname"
                   className="mt-1 w-full rounded-md py-1.5 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
               <div className="col-span-6">
                 <label
-                  for="Email"
+                  htmlFor="Email"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Email
                 </label>
 
                 <input
+                  value={email}
+                  onChange={handleChange}
                   type="email"
                   id="Email"
                   name="email"
@@ -126,13 +190,15 @@ const Register = () => {
 
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  for="Password"
+                  htmlFor="Password"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
 
                 <input
+                  value={password}
+                  onChange={handleChange}
                   type="password"
                   id="Password"
                   name="password"
@@ -142,23 +208,27 @@ const Register = () => {
 
               <div className="col-span-6 sm:col-span-3">
                 <label
-                  for="PasswordConfirmation"
+                  htmlFor="PasswordConfirmation"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Password Confirmation
                 </label>
 
                 <input
+                  value={confirmPassword}
+                  onChange={handleChange}
                   type="password"
                   id="PasswordConfirmation"
-                  name="password_confirmation"
+                  name="confirmPassword"
                   className="mt-1 w-full rounded-md py-1.5 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                 />
               </div>
 
               <div className="col-span-6">
-                <label for="MarketingAccept" className="flex gap-4">
+                <label htmlFor="MarketingAccept" className="flex gap-4">
                   <input
+                    value={marketing_accept}
+                    onChange={handleChange}
                     type="checkbox"
                     id="MarketingAccept"
                     name="marketing_accept"
@@ -177,17 +247,20 @@ const Register = () => {
                   By creating an account, you agree to our
                   <Link href="#" className="text-gray-700 underline">
                     terms and conditions
-                  </Link>
-                                 {" "} and{" " }
+                  </Link>{" "}
+                  and{" "}
                   <Link href="#" className="text-gray-700 underline">
-                                      privacy policy{"   " }
+                    privacy policy{"   "}
                   </Link>
                   of online contact list store.
                 </p>
               </div>
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                <button
+                  type="submit"
+                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                >
                   Create an account
                 </button>
 
@@ -205,6 +278,6 @@ const Register = () => {
       </div>
     </section>
   );
-}
+};
 
-export default Register
+export default Register;
