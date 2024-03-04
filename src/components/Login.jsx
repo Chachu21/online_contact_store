@@ -1,81 +1,130 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+"use client"
+import React from 'react';
+import Link from 'next/link';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useRouter } from 'next/navigation';
+
 const Login = () => {
+const router = useRouter()
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify(values)
+      });
+
+      if (response.ok) {
+        router.push("/dashboard")
+        router.refresh()
+      }
+      // Handle the response here, e.g., show success/error messages, redirect, etc.
+    } catch (error) {
+      console.error('Error while logging in:', error);
+      // Handle error cases here
+    }
+  };
+
   return (
     <section className="bg-gradient-to-r from-green-300 to-blue-500 dark:bg-gray-900">
       <div className="container flex items-center justify-center min-h-screen px-6 mx-auto">
-        <form className="w-full max-w-md flex items-center justify-center flex-col border border-white py-10">
-          {/* <Image
-            width={64}
-            height={64}
-            className="rounded-full"
-            src="/images.png"
-            alt=""
-          /> */}
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, errors, touched }) => (
+            <Form className="w-full max-w-md flex items-center justify-center flex-col border border-white py-10">
+              <h1 className="mt-3 text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">
+                Welcome Back !
+              </h1>
 
-          <h1 className="mt-3 text-2xl font-semibold text-gray-800 capitalize sm:text-3xl dark:text-white">
-            Welcome Back !
-          </h1>
+              <div className="relative flex flex-col gap-2 mt-8">
+                <span className="absolute">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    {/* ... */}
+                  </svg>
+                </span>
 
-          <div className="relative flex items-center mt-8">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                <Field
+                  type="email"
+                  name="email"
+                  className={`block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40
+                    ${
+                      errors.email && touched.email
+                        ? 'border-red-400'
+                        : ' border-gray-200'
+                    }`}
+                  placeholder="Email address"
                 />
-              </svg>
-            </span>
-
-            <input
-              type="email"
-              className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Email address"
-            />
-          </div>
-
-          <div className="relative flex items-center mt-4">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
-              </svg>
-            </span>
+              </div>
 
-            <input
-              type="password"
-              className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Password"
-            />
-          </div>
+              <div className="relative flex flex-col gap-2 mt-4">
+                <span className="absolute">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    {/* ... */}
+                  </svg>
+                </span>
 
-          <div className="mt-6">
-            <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
-              Sign in
-            </button>
+                <Field
+                  type="password"
+                  name="password"
+                  className={`block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40
+                    ${
+                      errors.password && touched.password
+                        ? 'border-red-400'
+                        : ' border-gray-200'
+                    }`}
+                  placeholder="Password"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
 
-            <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
-              or sign in with
-            </p>
+              <div className="mt-6">
+                <button
+                  type="submit"
+                  className={`w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50
+                    ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting}
+                >
+                  Sign in
+                </button>
+
+                <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
+                  or sign in with
+                </p>
 
             <Link
               href="#"
@@ -103,19 +152,20 @@ const Login = () => {
               <span className="mx-2">Sign in with Google</span>
             </Link>
 
-            <div className="mt-6 text-center ">
-              <Link
-                href="/register"
-                className="text-sm text-blue-600 hover:underline dark:text-blue-400"
-              >
-                Don’t have an account yet? Sign up
-              </Link>
-            </div>
-          </div>
-        </form>
+           <div className="mt-6 text-center ">
+                  <Link
+                    href="/register"
+                    className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+                  >
+                    Don’t have an account yet? Sign up
+                  </Link>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </section>
   );
-}
-
-export default Login
+};
+export default Login;

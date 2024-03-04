@@ -4,9 +4,9 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="h-[100vh] flex lg:justify-bteween justify-center items-center gap-20 px-10 py-3 md:flex-col lg:flex-row bg-gradient-to-r from-green-300 to-blue-500">
+      <div className="min-h-[100vh]  flex md:justify-bteween justify-center items-center md:gap-20 gap-10 px-10 md:py-3 pb-20 flex-col md:flex-row bg-gradient-to-r from-green-300 to-blue-500">
         <div className="flex-1 flex-col justify-center items-center px-5 gap-5 ">
-          <h1 className="text-3xl text-slate-600 font-bold capitalize py-3 text-center">
+          <h1 className="text-3xl text-slate-600 font-bold capitalize py-2 text-center">
             online contact list store
           </h1>
           <p className="text-slate-600 font-normal text-2xl leading-8 ">
@@ -23,29 +23,31 @@ export default function Home() {
           <Image
             src="/contacts2.jpg"
             alt="contact list image"
-            width={1400}
-            height={500}
+            width={1200}
+            height={600}
+            objectFit="fill"
+            objectPosition="center"
           />
         </div>
       </div>
-      <div className="mt-10">
-        <div className="flex justify-center items-center text-2xl font-bold text-slate-800 mb-10">
+      <div className="mb-10">
+        <div className="flex justify-center items-center text-2xl font-bold text-slate-800 m-10">
           Features
         </div>
         <Features />
       </div>
-      <div className="m-10 px-10 py-4 flex flex-col gap-1 bg-gradient-to-r from-green-300 to-blue-500">
-        <div className="flex lg:justify-bteween justify-center items-center gap-20  py-3 md:flex-col lg:flex-row">
+      <div className="m-10 px-10 py-4 w-full flex flex-col gap-1 bg-gradient-to-r from-green-300 to-blue-500">
+        <div className="flex md:justify-bteween justify-center items-center gap-20  py-3 flex-col md:flex-row">
           <div className="flex-1">
             <Image
               src="/contacts1.jpg"
               alt="contact list image"
-              width={1400}
-              height={500}
+              width={1200}
+              height={600}
             />
           </div>
           <div className="flex-1 flex-col justify-center items-center px-5 gap-5 ">
-            <p className="text-slate-600 font-normal text-lg leading-8 ">
+            <p className="text-slate-600 font-normal text-md leading-8 ">
               Online contact list stores can be a convenient way to store and
               manage your contact information. They can also be a valuable tool
               for businesses that need to track customer contact information.
